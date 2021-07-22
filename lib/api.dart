@@ -23,14 +23,14 @@ Future<List> getTypicode(String action) async {
   return json.decode(body);
 }
 
-addComment(int postId, String name, String email, String body) async {
+addComment(int postId, String email, String name, String body) async {
   const action = '/comments';
   var url = Uri.parse("https://jsonplaceholder.typicode.com$action");
 
   var response = await http.post(url, headers: {"Accept": "application/json"}, body: {
     "postId": postId.toString(),
-    "name": name,
     "email": email,
+    "name": name,
     "body": body,
   });
 

@@ -2,11 +2,21 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:my_app/comment_form.dart';
 
-class PostView extends StatelessWidget {
+class PostView extends StatefulWidget {
   final Map post;
   final List comments;
 
   PostView({Key? key, required this.post, required this.comments}) : super(key: key);
+
+  @override
+  createState() => _PostViewState(post: post, comments: comments.toList());
+}
+
+class _PostViewState extends State<PostView> {
+  final Map post;
+  final List comments;
+
+  _PostViewState({required this.post, required this.comments});
 
   @override
   Widget build(BuildContext context) {
@@ -42,8 +52,12 @@ class PostView extends StatelessWidget {
           )),
           Divider(),
           ElevatedButton(
-            onPressed: () {
-              showModalBottomSheet(context: context, builder: (context) => CommentForm());
+            onPressed: () async {
+              final comment = await showModalBottomSheet(context: context, builder: (context) => CommentForm(postId: post['id']));
+
+              setState(() {
+                comments.add(comment);
+              });
             },
             child: Text('Добавить комментарий'),
           )
