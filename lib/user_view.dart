@@ -34,6 +34,8 @@ class UserView extends StatelessWidget {
           Text('email: ' + user['email']),
           Text('phone: ' + user['phone']),
           Text('website: ' + user['website']),
+          Text('company: ' + ['name', 'catchPhrase', 'bs'].map((key) => user['company'][key]).join(', ')),
+          Text('address: ' + ['city', 'street', 'suite'].map((key) => user['address'][key]).join(', ')),
           SingleChildScrollView(
             scrollDirection: Axis.horizontal,
             child: Row(

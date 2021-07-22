@@ -13,8 +13,10 @@ class PostsList extends StatelessWidget {
       appBar: AppBar(
         title: Text('User posts'),
       ),
-      body: Column(
-        children: [ for (var post in posts) PostPreview(post: post, getComments: getComments) ],
+      body: SingleChildScrollView(
+        child: Column(
+          children: [ for (var post in posts) PostPreview(post: post, getComments: getComments) ],
+        ),
       ),
     );
   }
