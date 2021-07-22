@@ -3,37 +3,47 @@ import 'package:my_app/album_preview.dart';
 import 'package:my_app/albums_list.dart';
 import 'package:my_app/post_preview.dart';
 import 'package:my_app/posts_list.dart';
+import 'package:collection/collection.dart';
 
 class UserView extends StatelessWidget {
-  final Map data;
+  final Map user;
+  final List posts;
+  final List albums;
+  final List photos;
 
-  UserView({Key? key, required this.data}) : super(key: key);
+  UserView({
+    Key? key,
+    required this.user,
+    required this.posts,
+    required this.albums,
+    required this.photos,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(data['username']),
+        title: Text(user['username']),
       ),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          Text('name: ' + data['name']),
-          Text('email: ' + data['email']),
-          Text('phone: ' + data['phone']),
-          Text('website: ' + data['website']),
+          Text('name: ' + user['name']),
+          Text('email: ' + user['email']),
+          Text('phone: ' + user['phone']),
+          Text('website: ' + user['website']),
           SingleChildScrollView(
             scrollDirection: Axis.horizontal,
             child: Row(
               textDirection: TextDirection.ltr,
               children: <Widget>[
                 Text('Posts: '),
-                ...[for (var p in data['posts'].values.take(3)) PostPreview(data: p) ],
+                ...[for (var post in posts.take(3)) PostPreview(post: post) ],
                 ElevatedButton(
                   child: Text('All posts'),
                   onPressed: () {
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => PostsList(data: data['posts'].values.toList())));
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => PostsList(posts: posts)));
                   },
                 )
               ],
@@ -45,11 +55,14 @@ class UserView extends StatelessWidget {
               textDirection: TextDirection.ltr,
               children: <Widget>[
                 Text('Albums: '),
-                ...[for (var p in data['albumPreviews'].values) AlbumPreview(data: p) ],
+                ...[for (var album in albums.take(3)) AlbumPreview(
+                    album: album,
+                    photo: photos.firstWhereOrNull((p) => p['albumId'] == album['id']),
+                )],
                 ElevatedButton(
                   child: Text('All albums'),
                   onPressed: () {
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => AlbumsList(data: data['albums'].values.toList())));
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => AlbumsList(albums: albums, photos: photos)));
                   },
                 )
               ],

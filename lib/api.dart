@@ -1,9 +1,8 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import "package:shared_preferences/shared_preferences.dart";
-import 'package:collection/collection.dart';
 
-Future<dynamic> getTypicode(String action) async {
+Future<List> getTypicode(String action) async {
   final prefs = await SharedPreferences.getInstance();
   String body;
 
@@ -22,91 +21,6 @@ Future<dynamic> getTypicode(String action) async {
   }
 
   return json.decode(body);
-}
-
-Future<Map> getTypicodeList(String action) async {
-  var items = await getTypicode(action);
-  var list = new Map<int, Map>();
-
-  for (var item in items) {
-    list[item['id']] = item;
-  }
-
-  return list;
-}
-
-Future<Map> getTypicodeGroupedList(String action, String groupField) async {
-  var items = await getTypicode(action);
-  var list = new Map<int, Map<int, Map>>();
-
-  for (var item in items) {
-    final key = item[groupField] is int ? item[groupField] : int.parse(item[groupField]);
-
-    if (!list.containsKey(key)) {
-      list[key] = new Map<int, Map>();
-    }
-
-    list[key]![item['id']] = item;
-  }
-
-  return list;
-}
-
-getUsers() async {
-  return getTypicodeList('/users');
-}
-
-Future<Map> getUsersWithRelations() async {
-  var users = await getUsers();
-  var posts = await getPosts();
-  var albums = await getAlbums();
-  var photos = await getPhotos();
-
-  for (var user in users.values) {
-    final userPosts = posts[user['id']] as Map;
-    final userAlbums = albums[user['id']] as Map;
-
-    var postPreviewsList = userPosts.values.take(3).map((post) {
-      var postCopy = Map.from(post);
-      postCopy['body'] = (post['body'].toString().split("\n").firstOrNull ?? '') + '...';
-      return postCopy;
-    });
-
-    var albumPreviewsList = userAlbums.values.take(3).map((album) {
-      var albumCopy = Map.from(album);
-      var albumPhotos = photos[album['id']] as Map;
-      albumCopy['photo'] = albumPhotos.values.firstOrNull;
-      return albumCopy;
-    });
-
-    user['postPreviews'] = { for (var p in postPreviewsList) p['id']: p };
-    user['albumPreviews'] = { for (var p in albumPreviewsList) p['id']: p };
-    user['posts'] = userPosts;
-    user['albums'] = userAlbums;
-  }
-
-  return users;
-}
-
-getPosts() async {
-  return getTypicodeGroupedList('/posts', 'userId');
-}
-
-getComments() async {
-  return getTypicodeGroupedList('/comments', 'postId');
-}
-
-getPostComments(int postId) async {
-  final comments = await getComments();
-  return comments[postId];
-}
-
-getAlbums() async {
-  return getTypicodeGroupedList('/albums', 'userId');
-}
-
-getPhotos() async {
-  return getTypicodeGroupedList('/photos', 'albumId');
 }
 
 addComment(int postId, String name, String email, String body) async {

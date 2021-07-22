@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:my_app/album_preview.dart';
 
 class AlbumsList extends StatelessWidget {
-  final List<Map> data;
+  final List albums;
+  final List photos;
 
-  AlbumsList({Key? key, required this.data}) : super(key: key);
+  AlbumsList({Key? key, required this.albums, required this.photos}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -13,7 +14,10 @@ class AlbumsList extends StatelessWidget {
         title: Text('User albums'),
       ),
       body: Column(
-        children: [ for (var p in data) AlbumPreview(data: p) ],
+        children: [ for (var album in albums) AlbumPreview(
+            album: album,
+            photo: photos.firstWhere((photo) => photo['albumId'] == album['id']),
+        )],
       ),
     );
   }

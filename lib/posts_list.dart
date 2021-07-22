@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:my_app/post_preview.dart';
 
 class PostsList extends StatelessWidget {
-  final List<Map> data;
+  final List posts;
 
-  PostsList({Key? key, required this.data}) : super(key: key);
+  PostsList({Key? key, required this.posts}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -13,7 +13,7 @@ class PostsList extends StatelessWidget {
         title: Text('User posts'),
       ),
       body: Column(
-        children: [ for (var p in data) PostPreview(data: p) ],
+        children: [ for (var post in posts) PostPreview(post: post) ],
       ),
     );
   }
