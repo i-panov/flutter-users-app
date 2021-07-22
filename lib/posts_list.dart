@@ -3,8 +3,9 @@ import 'package:my_app/post_preview.dart';
 
 class PostsList extends StatelessWidget {
   final List posts;
+  final List Function(int postId) getComments;
 
-  PostsList({Key? key, required this.posts}) : super(key: key);
+  PostsList({Key? key, required this.posts, required this.getComments}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -13,7 +14,7 @@ class PostsList extends StatelessWidget {
         title: Text('User posts'),
       ),
       body: Column(
-        children: [ for (var post in posts) PostPreview(post: post) ],
+        children: [ for (var post in posts) PostPreview(post: post, getComments: getComments) ],
       ),
     );
   }

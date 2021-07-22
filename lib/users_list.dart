@@ -8,6 +8,7 @@ Future<Map<String, List>> getData() async {
     'posts': await getTypicode('/posts'),
     'albums': await getTypicode('/albums'),
     'photos': await getTypicode('/photos'),
+    'comments': await getTypicode('/comments'),
   };
 }
 
@@ -25,6 +26,7 @@ class UsersList extends StatelessWidget {
           final posts = snapshot.data?['posts'] ?? List.empty();
           final albums = snapshot.data?['albums'] ?? List.empty();
           final photos = snapshot.data?['photos'] ?? List.empty();
+          final comments = snapshot.data?['comments'] ?? List.empty();
 
           return ListView.separated(
             padding: const EdgeInsets.all(50),
@@ -43,15 +45,14 @@ class UsersList extends StatelessWidget {
                   .toList(growable: false) : [];
 
               final userPhotos = userAlbumIds.isNotEmpty ?
-                photos.where((photo) => userAlbumIds.contains(photo['albumId']))
-                  .toList(growable: false) :
-                [];
+                photos.where((photo) => userAlbumIds.contains(photo['albumId'])).toList(growable: false) : [];
 
               return GestureDetector(
                 onTap: () {
                   Navigator.push(context, MaterialPageRoute(builder: (context) => UserView(
                     user: user,
                     posts: userPosts,
+                    getComments: (postId) => comments.where((c) => c['postId'] == postId).toList(growable: false),
                     albums: userAlbums,
                     photos: userPhotos,
                   )));

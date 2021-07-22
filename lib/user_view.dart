@@ -8,6 +8,7 @@ import 'package:collection/collection.dart';
 class UserView extends StatelessWidget {
   final Map user;
   final List posts;
+  final List Function(int postId) getComments;
   final List albums;
   final List photos;
 
@@ -15,6 +16,7 @@ class UserView extends StatelessWidget {
     Key? key,
     required this.user,
     required this.posts,
+    required this.getComments,
     required this.albums,
     required this.photos,
   }) : super(key: key);
@@ -39,11 +41,11 @@ class UserView extends StatelessWidget {
               textDirection: TextDirection.ltr,
               children: <Widget>[
                 Text('Posts: '),
-                ...[for (var post in posts.take(3)) PostPreview(post: post) ],
+                ...[for (var post in posts.take(3)) PostPreview(post: post, getComments: getComments) ],
                 ElevatedButton(
                   child: Text('All posts'),
                   onPressed: () {
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => PostsList(posts: posts)));
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => PostsList(posts: posts, getComments: getComments)));
                   },
                 )
               ],
