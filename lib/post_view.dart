@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class PostView extends StatelessWidget {
@@ -16,7 +17,28 @@ class PostView extends StatelessWidget {
         children: <Widget>[
           Text(post['title'], style: TextStyle(fontWeight: FontWeight.bold)),
           Text(post['body'], style: TextStyle(fontStyle: FontStyle.italic)),
-          Text(comments.toString()),
+          Divider(),
+          Expanded(child: ListView.separated(
+              padding: const EdgeInsets.all(50),
+              separatorBuilder: (BuildContext context, int index) => Divider(),
+              itemCount: comments.length,
+              itemBuilder: (BuildContext context, int index) {
+                final comment = comments[index];
+
+                return Column(
+                  children: <Widget>[
+                    Row(
+                      children: <Widget>[
+                        Text(comment['email'], style: TextStyle(fontWeight: FontWeight.bold)),
+                        Text(': '),
+                        Text(comment['name'], style: TextStyle(fontStyle: FontStyle.italic)),
+                      ],
+                    ),
+                    Text(comment['body']),
+                  ],
+                );
+              }
+          )),
         ],
       ),
     );
