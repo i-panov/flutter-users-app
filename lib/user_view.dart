@@ -3,14 +3,13 @@ import 'package:my_app/album_preview.dart';
 import 'package:my_app/albums_list.dart';
 import 'package:my_app/post_preview.dart';
 import 'package:my_app/posts_list.dart';
-import 'package:collection/collection.dart';
 
 class UserView extends StatelessWidget {
   final Map user;
   final List posts;
   final List Function(int postId) getComments;
   final List albums;
-  final List photos;
+  final List Function(int albumId) getPhotos;
 
   UserView({
     Key? key,
@@ -18,7 +17,7 @@ class UserView extends StatelessWidget {
     required this.posts,
     required this.getComments,
     required this.albums,
-    required this.photos,
+    required this.getPhotos,
   }) : super(key: key);
 
   @override
@@ -57,14 +56,11 @@ class UserView extends StatelessWidget {
               textDirection: TextDirection.ltr,
               children: <Widget>[
                 Text('Albums: '),
-                ...[for (var album in albums.take(3)) AlbumPreview(
-                    album: album,
-                    photo: photos.firstWhereOrNull((p) => p['albumId'] == album['id']),
-                )],
+                ...[for (var album in albums.take(3)) AlbumPreview(album: album, getPhotos: getPhotos)],
                 ElevatedButton(
                   child: Text('All albums'),
                   onPressed: () {
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => AlbumsList(albums: albums, photos: photos)));
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => AlbumsList(albums: albums, getPhotos: getPhotos)));
                   },
                 )
               ],

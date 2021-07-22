@@ -3,9 +3,9 @@ import 'package:my_app/album_preview.dart';
 
 class AlbumsList extends StatelessWidget {
   final List albums;
-  final List photos;
+  final List Function(int albumId) getPhotos;
 
-  AlbumsList({Key? key, required this.albums, required this.photos}) : super(key: key);
+  AlbumsList({Key? key, required this.albums, required this.getPhotos}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -15,8 +15,8 @@ class AlbumsList extends StatelessWidget {
       ),
       body: Column(
         children: [ for (var album in albums) AlbumPreview(
-            album: album,
-            photo: photos.firstWhere((photo) => photo['albumId'] == album['id']),
+          album: album,
+          getPhotos: getPhotos,
         )],
       ),
     );

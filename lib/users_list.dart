@@ -34,18 +34,8 @@ class UsersList extends StatelessWidget {
             itemCount: users.length,
             itemBuilder: (BuildContext context, int index) {
               final user = users[index];
-
-              final userPosts = posts.where((post) => post['userId'] == user['id'])
-                  .toList(growable: false);
-
-              final userAlbums = albums.where((album) => album['userId'] == user['id'])
-                  .toList(growable: false);
-
-              final userAlbumIds = userAlbums.isNotEmpty ? userAlbums.map((a) => a['id'])
-                  .toList(growable: false) : [];
-
-              final userPhotos = userAlbumIds.isNotEmpty ?
-                photos.where((photo) => userAlbumIds.contains(photo['albumId'])).toList(growable: false) : [];
+              final userPosts = posts.where((post) => post['userId'] == user['id']).toList(growable: false);
+              final userAlbums = albums.where((album) => album['userId'] == user['id']).toList(growable: false);
 
               return GestureDetector(
                 onTap: () {
@@ -54,7 +44,7 @@ class UsersList extends StatelessWidget {
                     posts: userPosts,
                     getComments: (postId) => comments.where((c) => c['postId'] == postId).toList(growable: false),
                     albums: userAlbums,
-                    photos: userPhotos,
+                    getPhotos: (albumId) => photos.where((p) => p['albumId'] == albumId).toList(growable: false),
                   )));
                 },
                 child: Text("${user['username']} (${user['name']})", style: TextStyle(fontSize: 22)),
