@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:my_app/comment_form.dart';
 
 class PostView extends StatelessWidget {
   final Map post;
@@ -39,6 +40,13 @@ class PostView extends StatelessWidget {
                 );
               }
           )),
+          Divider(),
+          ElevatedButton(
+            onPressed: () {
+              showModalBottomSheet(context: context, builder: (context) => CommentForm());
+            },
+            child: Text('Добавить комментарий'),
+          )
         ],
       ),
     );
